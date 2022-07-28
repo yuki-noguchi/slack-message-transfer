@@ -9,6 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.2.4",
+    "@discordjs/rest": "^1.0.1",
+    "@emotion/react": "^11",
+    "@emotion/styled": "^11",
+    "@slack/web-api": "^6.7.2",
+    "axios": "^0.27.2",
+    "discord.js": "^14.0.3",
+    "framer-motion": "^6",
     "next": "12.2.3",
     "react": "18.2.0",
     "react-dom": "18.2.0"
