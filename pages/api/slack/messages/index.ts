@@ -22,12 +22,14 @@ const handler = async (
   // TODO newするのは一回のみにしたい
   const client = new WebClient(body.slackToken);
 
-  const result = await client.conversations.history({
+  const members = await client.users.list();
+
+  const messages = await client.conversations.history({
     channel: body.slackChannel.id,
   });
 
   return res.status(200).json(
-    result
+    messages
       .messages!.filter(
         (message) =>
           message.type === "message" &&
@@ -36,11 +38,19 @@ const handler = async (
       )
       .slice()
       .reverse()
-      .map((message) =>
-        message.text?.startsWith("<http")
+      .map((message) => {
+        const member = members.members?.find(
+          (member) => member.id === message.user
+        );
+        const text = message.text?.startsWith("<http")
           ? message.text?.split("|")[0].slice(1)
-          : message.text
-      )
+          : message.text;
+        const postDateTime = new Date(
+          parseInt(message.ts!) * 1000
+        ).toLocaleString();
+
+        return `${member?.profile?.display_name_normalized}: ${text}(${postDateTime})`;
+      })
       .map((message) => ({ message: message! }))
   );
 };
